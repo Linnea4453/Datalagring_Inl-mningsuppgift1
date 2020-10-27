@@ -19,7 +19,7 @@ namespace ClassLibrary.Service
 
             return await FileIO.ReadTextAsync(file);
         }
-
+        //
         public static IEnumerable<Person> ReadFromFile(string filepath, char delimiter = ';')
         {
             var lines = File.ReadAllLines(filepath).ToList();
