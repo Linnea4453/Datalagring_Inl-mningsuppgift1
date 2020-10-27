@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<books>
+	<book>
+		<title>Bokens Titel 1</title>
+	</book>
+	<book>
+		<title>Bokens Titel 2</title>
+	</book>
+	<book>
+		<title>Bokens Titel 3</title>
+	</book>
+	<book>
+		<title>Bokens Titel 4</title>
+	</book>
+</books>
