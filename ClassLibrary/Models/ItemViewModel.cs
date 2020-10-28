@@ -5,21 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ClassLibrary.Service;
-using Newtonsoft.Json;
 
 namespace ClassLibrary.Models
 {
-    public class PersonViewModel
+    public class ItemViewModel
     {
-        public ObservableCollection<Person> Persons { get; set; }
         public ObservableCollection<Item> Items { get; set; }
 
-        public PersonViewModel()
+        public ItemViewModel(string fileName)
         {
-            Persons = new ObservableCollection<Person>();
             Items = new ObservableCollection<Item>();
+           
         }
-
-      
     }
 }

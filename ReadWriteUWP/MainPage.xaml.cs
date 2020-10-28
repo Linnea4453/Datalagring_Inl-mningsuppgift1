@@ -33,16 +33,41 @@ namespace ReadWriteUWP
     public sealed partial class MainPage : Page
     {
         private PersonViewModel personViewModel { get; set; }
-        private static List<Person> persons = new List<Person>();
+        //private ItemViewModel itemViewModel { get; set; }
+
 
         public MainPage()
         {
             this.InitializeComponent();
             personViewModel = new PersonViewModel();
+            
 
         }
 
-        public async Task PopulateCustomerViewModel(string fileName)
+        //private async Task GetCsvFileAsync(string fileName)
+        //{
+          
+        //    var data = File.ReadAllLines(fileName);
+
+        //    var items = new List<Item>();
+
+        //    foreach (var line in data)
+        //    {
+        //        var lineInfo = line.Split(';');
+
+        //        items.Add(new Item()
+        //        {
+        //            Age = Convert.ToInt32(lineInfo[0]),
+        //            FirstName = lineInfo[1],
+        //            LastName = lineInfo[2],
+        //            Email = lineInfo[3]
+        //        });
+
+        //    }
+
+        //}
+
+        public async Task PopulateCustomerViewModel(string fileName, string filePath)
         {
             bool bjson = false;
             bool bcsv = false;
@@ -61,16 +86,46 @@ namespace ReadWriteUWP
                     personViewModel.Persons.Add(person);
                 }
             }
-            else
-                if (bcsv)
-            {
-                var persons = new ObservableCollection<Person>(CsvService.ReadFromFile(fileName));
 
-                foreach (var person in persons)
+            if (bcsv)
+            {
+                //var items = new ObservableCollection<Item>();
+                var data = File.ReadAllLines(fileName);
+                var items = new List<Item>();
+            
+
+            foreach (var line in data)
+            {
+                var lineInfo = line.Split(';');
+
+                items.Add(new Item()
                 {
-                    var data = fileName.Split(',');
-                    persons.Add(new Person(data[0], data[1], Convert.ToInt32(data[2]), data[3]));
-                }
+                    Age = Convert.ToInt32(lineInfo[0]),
+                    FirstName = lineInfo[1],
+                    LastName = lineInfo[2],
+                    Email = lineInfo[3]
+                });
+
+            }
+
+
+                //var data = File.ReadAllLines(filePath);
+
+                //var items = new List<Item>();
+
+                //foreach (var line in data)
+                //{
+                //    var lineInfo = line.Split(';');
+
+                //    items.Add(new Item()
+                //    {
+                //        Age = Convert.ToInt32(lineInfo[0]),
+                //        FirstName = lineInfo[1],
+                //        LastName = lineInfo[2],
+                //        Email = lineInfo[3]
+                //    });
+
+                //    }
             }
 
             //if (bxml)
@@ -102,7 +157,7 @@ namespace ReadWriteUWP
 
                 if (file != null)
                 {
-                    PopulateCustomerViewModel(file.Name).GetAwaiter();
+                    PopulateCustomerViewModel(file.Name, file.Path).GetAwaiter();
                 }
 
                 //else
@@ -114,6 +169,11 @@ namespace ReadWriteUWP
                 //PopulateCustomerViewModel("file").GetAwaiter();
                 //PopulateCustomerViewModel("file.json").GetAwaiter();
             }
+
+        private void btn_getcsv_Click(object sender, RoutedEventArgs e)
+        {
+
         }
+    }
     }
 
