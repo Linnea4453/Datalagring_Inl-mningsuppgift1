@@ -12,7 +12,7 @@ namespace ClassLibrary.Models
     {
         public ObservableCollection<Item> Items { get; set; }
 
-        public ItemViewModel(string fileName)
+        public ItemViewModel()
         {
             Items = new ObservableCollection<Item>();
            

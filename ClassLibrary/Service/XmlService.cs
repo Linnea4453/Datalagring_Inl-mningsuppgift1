@@ -1,33 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Linq;
+using Windows.ApplicationModel;
+using Windows.Networking.NetworkOperators;
 using Windows.Storage;
+using Windows.UI.Composition;
+using Windows.UI.Xaml.Controls;
 
 namespace ClassLibrary.Service
 {
     public class XmlService
     {
 
-        //public static async Task<string>GetXmlFileAsync(string file)
-        //{
-        //    StorageFile file = KnownFolders.DocumentsLibrary
-        //}
-        
+        public static void GetXmlFileAsync(string file)
+        {
+            using XmlTextReader xml = new XmlTextReader(file);
 
-        //StorageFile tempFile = await ApplicationData.Current.LocalFolder.GetXmlFileAsync("");
-        //String datas = await FileIO.ReadTextAsync(tempFile);
-        //XDocument loadedData = XDocument.Load(datas);
-        //var data = from query in loadedData.Descendants("mvinfo")
-        //           select new MVData
-        //           {
-        //               VideoTitle = (string)query.Element("title"),
-        //               VideoYear = (string)query.Element("year"),
-        //               VideoSource = (string)query.Element("link"),
-        //               ImageSource = (string)query.Element("imgSource")
-        //           };
-        //YouTubeMV.ItemsSource = data;
+            xml.Read();
+
+            while (xml.Read())
+            {
+                
+            }
+
+
+
+        }
+
+
+    
     }
 }

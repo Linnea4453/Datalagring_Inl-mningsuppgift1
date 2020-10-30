@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Linq;
 using ClassLibrary.Models;
 using ClassLibrary.Service;
 using Newtonsoft.Json;
@@ -14,6 +16,7 @@ using Windows.Foundation.Collections;
 using Windows.Media.Protection.PlayReady;
 using Windows.Storage;
 using Windows.Storage.Pickers.Provider;
+using Windows.Storage.Streams;
 using Windows.System.UserProfile;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -35,37 +38,75 @@ namespace ReadWriteUWP
         private PersonViewModel personViewModel { get; set; }
         //private ItemViewModel itemViewModel { get; set; }
 
-
+        private ObservableCollection<string> Item = new ObservableCollection<string>();
         public MainPage()
         {
             this.InitializeComponent();
             personViewModel = new PersonViewModel();
-            
 
         }
 
-        //private async Task GetCsvFileAsync(string fileName)
-        //{
-          
-        //    var data = File.ReadAllLines(fileName);
+        public async Task GetCsvFileAsync(string fileName, char delimiter = ';')
+        {
+            var LINNEA = tbCsv.Text = await CsvService.GetCsvFileAsync("file.csv");
 
-        //    var items = new List<Item>();
+            var lines = File.ReadAllLines("file.cvs").ToList();
+            var items = new List<Person>();
+            foreach (var line in lines)
+            {
+                var data = line.Split(delimiter);
 
-        //    foreach (var line in data)
-        //    {
-        //        var lineInfo = line.Split(';');
+                foreach (var item in items)
+                {
+                    items.Add(new Person(data[0], data[1], Convert.ToInt32(data[2]), data[3]));
 
-        //        items.Add(new Item()
-        //        {
-        //            Age = Convert.ToInt32(lineInfo[0]),
-        //            FirstName = lineInfo[1],
-        //            LastName = lineInfo[2],
-        //            Email = lineInfo[3]
-        //        });
 
-        //    }
+                }
+            }
 
-        //}
+
+            //CsvRowsListView.ItemsSource = CsvRows;
+
+            //var data = File.ReadAllLines(fileName);
+
+            //var items = new List<Item>();
+
+            //foreach (var line in data)
+            //{
+            //    var lineInfo = line.Split(';');
+
+            //    items.Add(new Item()
+            //    {
+            //        Age = Convert.ToInt32(lineInfo[0]),
+            //        FirstName = lineInfo[1],
+            //        LastName = lineInfo[2],
+            //        Email = lineInfo[3]
+            //    });
+
+            //}
+
+        }
+
+        public async Task GetXmlFileAsync(string file)
+        {
+            using XmlTextReader xml = new XmlTextReader(file);
+            xml.Read();
+
+            while (xml.Read())
+            {
+                tbxml.Text = await CsvService.GetCsvFileAsync("file.xml");
+
+                XmlNodeType ntype = xml.NodeType;
+                if (ntype == XmlNodeType.Element)
+                {
+                    if (xml.Name == "book")
+                    {
+                        xml.GetAttribute("xml");
+                        tbxml.Text = await CsvService.GetCsvFileAsync("file.xml");
+                    }
+                }
+            }
+        }
 
         public async Task PopulateCustomerViewModel(string fileName, string filePath)
         {
@@ -89,42 +130,26 @@ namespace ReadWriteUWP
 
             if (bcsv)
             {
-                //var items = new ObservableCollection<Item>();
-                var data = File.ReadAllLines(fileName);
-                var items = new List<Item>();
-            
-
-            foreach (var line in data)
-            {
-                var lineInfo = line.Split(';');
-
-                items.Add(new Item()
-                {
-                    Age = Convert.ToInt32(lineInfo[0]),
-                    FirstName = lineInfo[1],
-                    LastName = lineInfo[2],
-                    Email = lineInfo[3]
-                });
-
-            }
+                //    var items = new ObservableCollection<Item>(CsvService.GetCsvFileAsync(fileName));
+                //    var data = File.ReadAllLines(fileName);
+                //    var items = new List<Item>();
 
 
-                //var data = File.ReadAllLines(filePath);
-
-                //var items = new List<Item>();
-
-                //foreach (var line in data)
-                //{
-                //    var lineInfo = line.Split(';');
-
-                //    items.Add(new Item()
+                //    foreach (var line in data)
                 //    {
-                //        Age = Convert.ToInt32(lineInfo[0]),
-                //        FirstName = lineInfo[1],
-                //        LastName = lineInfo[2],
-                //        Email = lineInfo[3]
-                //    });
+                //        var lineInfo = line.Split(';');
 
+                //        items.Add(new Item()
+                //        {
+                //            Age = Convert.ToInt32(lineInfo[0]),
+                //            FirstName = lineInfo[1],
+                //            LastName = lineInfo[2],
+                //            Email = lineInfo[3]
+                //        });
+                //    }
+                //    foreach (var item in items)
+                //    {
+                //        personViewModel.Items.Add(item);
                 //    }
             }
 
@@ -146,34 +171,63 @@ namespace ReadWriteUWP
         }
 
         private async void btn_getjson_Click(object sender, RoutedEventArgs e)
+        {
+            var picker = new Windows.Storage.Pickers.FileOpenPicker();
+            picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.List;
+            picker.FileTypeFilter.Add(".json");
+            picker.FileTypeFilter.Add(".csv");
+            picker.FileTypeFilter.Add(".xml");
+
+            StorageFile file = await picker.PickSingleFileAsync();
+
+            if (file != null)
             {
-                var picker = new Windows.Storage.Pickers.FileOpenPicker();
-                picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.List;
-                picker.FileTypeFilter.Add(".json");
-                picker.FileTypeFilter.Add(".csv");
-                picker.FileTypeFilter.Add(".xml");
-
-                StorageFile file = await picker.PickSingleFileAsync();
-
-                if (file != null)
-                {
-                    PopulateCustomerViewModel(file.Name, file.Path).GetAwaiter();
-                }
-
-                //else
-                //{
-                //    OutputTextBlock.Text = "Operation cancelled.";
-                //}
-                //var Storagefile = await picker.PickSingleFileAsync();
-
-                //PopulateCustomerViewModel("file").GetAwaiter();
-                //PopulateCustomerViewModel("file.json").GetAwaiter();
+                PopulateCustomerViewModel(file.Name, file.Path).GetAwaiter();
             }
 
-        private void btn_getcsv_Click(object sender, RoutedEventArgs e)
+        }
+
+
+        private async void btn_getcsv_Click(object sender, RoutedEventArgs e)
         {
+            var picker = new Windows.Storage.Pickers.FileOpenPicker();
+            picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.List;
+            picker.FileTypeFilter.Add(".csv");
+            StorageFile file = await picker.PickSingleFileAsync();
+            Item.Clear();
+
+            if (file != null)
+            {
+                GetCsvFileAsync(file.Name).GetAwaiter();
+            }
+
+
+            //CsvRowsListView.ItemsSource = CsvRowsListView;
 
         }
+
+        private async void btn_getxml_Click(object sender, RoutedEventArgs e)
+        {
+                var picker = new Windows.Storage.Pickers.FileOpenPicker();
+                picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.List;
+                picker.FileTypeFilter.Add(".xml");
+
+            //    //StorageFile file = await ApplicationData.Current.LocalFolder.GetFileAsync(".xml");
+            //    //using (IRandomAccessStream writeStream = await file.OpenAsync(FileAccessMode.ReadWrite))
+            //    //{
+            //    //    Stream s = writeStream.AsStreamForWrite();
+            //    //    XmlWriterSettings settings = new XmlWriterSettings();
+            //    //    settings.Async = true;
+            //    //    using (XmlWriter writer = XmlWriter.Create(s, settings))
+            //    //    {
+
+            //    //        //writer.Flush();
+            //    //        await writer.FlushAsync();
+            //    //    }
+            //    //}
+            //}
+        }
     }
-    }
+}
+    
 
