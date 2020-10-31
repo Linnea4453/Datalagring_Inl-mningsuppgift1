@@ -50,7 +50,7 @@ namespace ReadWriteUWP
 
         public async Task GetCsvFileAsync(string fileName, char delimiter = ';')
         {
-            var items = <ObservableCollection<Item>>(await JsonService.GetJsonFileAsync(fileName));
+            var items = <ObservableCollection<Item>>(await CsvService.GetCsvFileAsync(fileName));
 
             foreach (var item in items)
             {
