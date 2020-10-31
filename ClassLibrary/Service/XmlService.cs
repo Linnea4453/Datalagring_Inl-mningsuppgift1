@@ -18,23 +18,30 @@ namespace ClassLibrary.Service
 {
     public class XmlService
     {
-
-        public static void GetXmlFileAsync(string file)
+        public static async Task<string> GetXmlFileAsync(string fileName)
         {
-            using XmlTextReader xml = new XmlTextReader(file);
 
-            xml.Read();
+            StorageFolder storageFolder = KnownFolders.DocumentsLibrary;
+            StorageFile file = await storageFolder.GetFileAsync(fileName);
 
-            while (xml.Read())
-            {
-                
-            }
-
-
-
+            return await FileIO.ReadTextAsync(file);
         }
 
+        //public static void GetXmlFileAsync(string file)
+        //{
+        //    using XmlTextReader xml = new XmlTextReader(file);
+        //    xml.Read();
 
-    
+        //    while (xml.Read())
+        //    {
+
+        //    }
+
+
+
+        //}
+
+
+
     }
 }

@@ -28,10 +28,26 @@
         <Button x:Name="btn_getjson" Click="btn_getjson_Click" Grid.Column="0" Width="400" Height="150" Margin="50" Content="Get Json File" FontSize="60"/>
         <Button x:Name="btn_getcsv" Click="btn_getcsv_Click" Grid.Column="1" Width="400" Height="150" Margin="50" Content="Get Csv File" FontSize="60"/>
         <Button x:Name="btn_getxml" Click="btn_getxml_Click" Grid.Column="2" Width="400" Height="150" Margin="50" Content="Get XML File" FontSize="60"/>
-        <StackPanel Grid.Row="1" >
+        <StackPanel Grid.Row="1" Grid.Column="0" >
             <ListView Margin="10" x:Name="lvGetInformation" ItemsSource="{Binding Source={StaticResource PersonCollection}}" >
                 <ListView.ItemTemplate>
                     <DataTemplate x:DataType="models:Person" >
+                        <StackPanel >
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{x:Bind FirstName}" Margin="0,0,5,0"/>
+                                <TextBlock Text="{x:Bind LastName}" />
+                            </StackPanel>
+                            <TextBlock Text="{x:Bind Email}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Grid.Column="1" >
+            <ListView Margin="10" x:Name="lvGetCSVInformation" ItemsSource="{Binding Source={StaticResource ItemCollection}}" >
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Item" >
                         <StackPanel >
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{x:Bind FirstName}" Margin="0,0,5,0"/>
@@ -50,6 +66,7 @@
                 </StackPanel>
             </ListView>
         </StackPanel>
+        
         <StackPanel Grid.Row="2" Grid.Column="2">
             <ListView x:Name="lvXml" Margin="10"  >
                 <StackPanel>

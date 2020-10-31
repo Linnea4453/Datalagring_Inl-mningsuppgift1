@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -36,33 +37,40 @@ namespace ReadWriteUWP
     public sealed partial class MainPage : Page
     {
         private PersonViewModel personViewModel { get; set; }
-        //private ItemViewModel itemViewModel { get; set; }
+       private ItemViewModel itemViewModel { get; set; }
 
         private ObservableCollection<string> Item = new ObservableCollection<string>();
         public MainPage()
         {
             this.InitializeComponent();
             personViewModel = new PersonViewModel();
+            itemViewModel = new ItemViewModel();
 
         }
 
         public async Task GetCsvFileAsync(string fileName, char delimiter = ';')
         {
-            var LINNEA = tbCsv.Text = await CsvService.GetCsvFileAsync("file.csv");
+            var items = <ObservableCollection<Item>>(await JsonService.GetJsonFileAsync(fileName));
+
+            foreach (var item in items)
+            {
+                personViewModel.Items.Add(item);
+
+            }
 
             var lines = File.ReadAllLines("file.cvs").ToList();
-            var items = new List<Person>();
-            foreach (var line in lines)
-            {
-                var data = line.Split(delimiter);
-
-                foreach (var item in items)
-                {
-                    items.Add(new Person(data[0], data[1], Convert.ToInt32(data[2]), data[3]));
 
 
-                }
-            }
+            //var items = new List<Person>();
+            //foreach (var line in lines)
+            //{
+            //    var data = line.Split(delimiter);
+
+            //    foreach (var item in items)
+            //    {
+            //        items.Add(new Person(data[0], data[1], Convert.ToInt32(data[2]), data[3]));
+            //    }
+            //}
 
 
             //CsvRowsListView.ItemsSource = CsvRows;
@@ -198,6 +206,7 @@ namespace ReadWriteUWP
 
             if (file != null)
             {
+                tbCsv.Text = await CsvService.GetCsvFileAsync("file.csv");
                 GetCsvFileAsync(file.Name).GetAwaiter();
             }
 
@@ -206,13 +215,21 @@ namespace ReadWriteUWP
 
         }
 
+
         private async void btn_getxml_Click(object sender, RoutedEventArgs e)
         {
                 var picker = new Windows.Storage.Pickers.FileOpenPicker();
                 picker.ViewMode = Windows.Storage.Pickers.PickerViewMode.List;
                 picker.FileTypeFilter.Add(".xml");
 
-            //    //StorageFile file = await ApplicationData.Current.LocalFolder.GetFileAsync(".xml");
+            StorageFile file = await picker.PickSingleFileAsync();
+
+            if (file != null)
+            {
+                
+                tbxml.Text = await CsvService.GetCsvFileAsync("file.xml");
+                GetXmlFileAsync(file.Name).GetAwaiter();
+            }
             //    //using (IRandomAccessStream writeStream = await file.OpenAsync(FileAccessMode.ReadWrite))
             //    //{
             //    //    Stream s = writeStream.AsStreamForWrite();
