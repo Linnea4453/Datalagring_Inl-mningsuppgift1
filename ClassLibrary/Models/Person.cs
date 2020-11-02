@@ -9,6 +9,11 @@ namespace ClassLibrary.Models
 {
     public class Person
     {
+        public Person()
+        {
+
+        }
+
         public Person(string v1, string v2, int v3, string v4)
         {
         }

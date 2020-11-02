@@ -38,6 +38,7 @@
                                 <TextBlock Text="{x:Bind LastName}" />
                             </StackPanel>
                             <TextBlock Text="{x:Bind Email}" />
+                            <TextBlock Text="{x:Bind Id}"/>
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
@@ -45,33 +46,37 @@
         </StackPanel>
 
         <StackPanel Grid.Row="2" Grid.Column="1" >
-            <ListView Margin="10" x:Name="lvGetCSVInformation" ItemsSource="{Binding Source={StaticResource ItemCollection}}" >
+            <ListView Margin="10" x:Name="lvGetCSVInformation" >
                 <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="models:Item" >
+                    <DataTemplate x:DataType="models:Person" >
                         <StackPanel >
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{x:Bind FirstName}" Margin="0,0,5,0"/>
                                 <TextBlock Text="{x:Bind LastName}" />
                             </StackPanel>
                             <TextBlock Text="{x:Bind Email}" />
+                            <TextBlock Text="{x:Bind Id}"/>
                         </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
         </StackPanel>
-        <StackPanel Grid.Row="2" Grid.Column="1">
-            <ListView x:Name="CsvRowsListView" Margin="10"  >
-                <StackPanel>
-                    <TextBlock x:Name="tbCsv"  Margin="0,0,5,0"/>
-                </StackPanel>
-            </ListView>
-        </StackPanel>
+    
         
         <StackPanel Grid.Row="2" Grid.Column="2">
             <ListView x:Name="lvXml" Margin="10"  >
-                <StackPanel>
-                    <TextBlock x:Name="tbxml" Margin="0,0,5,0"/>
-                </StackPanel>
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Person" >
+                        <StackPanel >
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{x:Bind FirstName}" Margin="0,0,5,0"/>
+                                <TextBlock Text="{x:Bind LastName}" />
+                            </StackPanel>
+                            <TextBlock Text="{x:Bind Email}" />
+                            <TextBlock Text="{x:Bind Id}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
             </ListView>
         </StackPanel>
     </Grid>

@@ -50,16 +50,17 @@ namespace ReadWriteUWP
 
         public async Task GetCsvFileAsync(string fileName, char delimiter = ';')
         {
-            var items = <ObservableCollection<Item>>(await CsvService.GetCsvFileAsync(fileName));
-
+            //var items = < ObservableCollection < Item >> (await CsvService.GetCsvFileAsync(fileName));
+            var items = new List<Person>();
             foreach (var item in items)
             {
-                personViewModel.Items.Add(item);
+                //itemViewModel.Items.Add(item);
 
             }
 
             var lines = File.ReadAllLines("file.cvs").ToList();
 
+            return ;
 
             //var items = new List<Person>();
             //foreach (var line in lines)
@@ -95,26 +96,26 @@ namespace ReadWriteUWP
 
         }
 
-        public async Task GetXmlFileAsync(string file)
-        {
-            using XmlTextReader xml = new XmlTextReader(file);
-            xml.Read();
+        //public async Task GetXmlFileAsync(string file)
+        //{
+        //    using XmlTextReader xml = new XmlTextReader(file);
+        //    xml.Read();
 
-            while (xml.Read())
-            {
-                tbxml.Text = await CsvService.GetCsvFileAsync("file.xml");
+        //    while (xml.Read())
+        //    {
+        //        tbxml.Text = await CsvService.GetCsvFileAsync("file.xml");
 
-                XmlNodeType ntype = xml.NodeType;
-                if (ntype == XmlNodeType.Element)
-                {
-                    if (xml.Name == "book")
-                    {
-                        xml.GetAttribute("xml");
-                        tbxml.Text = await CsvService.GetCsvFileAsync("file.xml");
-                    }
-                }
-            }
-        }
+        //        XmlNodeType ntype = xml.NodeType;
+        //        if (ntype == XmlNodeType.Element)
+        //        {
+        //            if (xml.Name == "book")
+        //            {
+        //                xml.GetAttribute("xml");
+        //                tbxml.Text = await CsvService.GetCsvFileAsync("file.xml");
+        //            }
+        //        }
+        //    }
+        //}
 
         public async Task PopulateCustomerViewModel(string fileName, string filePath)
         {
@@ -206,8 +207,24 @@ namespace ReadWriteUWP
 
             if (file != null)
             {
-                tbCsv.Text = await CsvService.GetCsvFileAsync("file.csv");
-                GetCsvFileAsync(file.Name).GetAwaiter();
+                var persons = new List<Person>();
+                var list = await FileIO.ReadLinesAsync(file);
+
+                foreach(var item in list)
+                {
+                    var person = item.Split(';');
+
+                    persons.Add(new Person
+                    {
+                        Id = Convert.ToInt32(person[0]),
+                        FirstName = person[1],
+                        LastName = person[2],
+                        Email = person[3]
+                    });
+                }
+
+                lvGetCSVInformation.ItemsSource = persons;
+
             }
 
 
@@ -226,23 +243,40 @@ namespace ReadWriteUWP
 
             if (file != null)
             {
-                
-                tbxml.Text = await CsvService.GetCsvFileAsync("file.xml");
-                GetXmlFileAsync(file.Name).GetAwaiter();
-            }
-            //    //using (IRandomAccessStream writeStream = await file.OpenAsync(FileAccessMode.ReadWrite))
-            //    //{
-            //    //    Stream s = writeStream.AsStreamForWrite();
-            //    //    XmlWriterSettings settings = new XmlWriterSettings();
-            //    //    settings.Async = true;
-            //    //    using (XmlWriter writer = XmlWriter.Create(s, settings))
-            //    //    {
+                using (var stream = await file.OpenStreamForReadAsync())
+                {
+                    var persons = new List<Person>();
 
-            //    //        //writer.Flush();
-            //    //        await writer.FlushAsync();
-            //    //    }
-            //    //}
-            //}
+                    XmlDocument xdoc = new XmlDocument();
+                    xdoc.Load(stream);
+
+
+                    XmlNodeList nodes = xdoc.GetElementsByTagName("person");
+
+                    foreach(XmlNode node in nodes)
+                    {
+                        
+                        var temp = new List<string>();
+
+                        foreach(XmlNode child in node.ChildNodes)
+                        {
+                            temp.Add(child.InnerText);
+                        }
+
+                        persons.Add(new Person
+                        {
+                            Id = Convert.ToInt32(temp[0]),
+                            FirstName = temp[1],
+                            LastName = temp[2],
+                            Email = temp[3]
+                        });
+                    }
+
+                    lvXml.ItemsSource = persons;
+                }
+
+            }
+
         }
     }
 }
