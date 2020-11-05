@@ -27,21 +27,5 @@ namespace ClassLibrary.Service
             return await FileIO.ReadTextAsync(file);
         }
 
-        //public static void GetXmlFileAsync(string file)
-        //{
-        //    using XmlTextReader xml = new XmlTextReader(file);
-        //    xml.Read();
-
-        //    while (xml.Read())
-        //    {
-
-        //    }
-
-
-
-        //}
-
-
-
     }
 }

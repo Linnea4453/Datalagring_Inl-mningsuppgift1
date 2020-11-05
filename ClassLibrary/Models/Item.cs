@@ -21,5 +21,5 @@ namespace ClassLibrary.Models
         public string Email { get; set; }
     }
 
-   
+
 }
